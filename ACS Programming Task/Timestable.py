@@ -9,8 +9,7 @@ while i_Number < 1 or i_Number > 10:
 for counter in range (1,13):
     print(i_Number * counter)
     counter = counter + 1
-    
-
+#counter increases by 1 each loop
 
 
 
