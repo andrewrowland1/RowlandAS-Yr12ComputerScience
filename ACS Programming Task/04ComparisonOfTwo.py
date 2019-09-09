@@ -4,7 +4,11 @@ i_Number2 = int(input("Please input a second number"))
 final = -9999999999999
 if i_Number1 > i_Number2:
     final = i_Number1
+    lowest = i_Number2
 else:
     final = i_Number2
-print(final)
+    lowest = i_Number1
+# endif
+print(final, lowest)
+
 
