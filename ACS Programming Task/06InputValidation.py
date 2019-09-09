@@ -10,4 +10,5 @@ if i_Number != 99:
         print(i_Number * counter)
         counter = counter + 1
         #counter increases by 1 each loop
+        
 
