@@ -11,5 +11,6 @@ else:
     greatest = i_Number2
 if greatest < i_Number3:
     greatest = i_Number3
+    print(greatest)
 else:
     print(greatest)
