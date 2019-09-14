@@ -34,7 +34,10 @@ if i_Number3 > i_Number2 and i_Number3 > i_Number1:
 if i_Number1 == i_Number2 and i_Number1 == i_Number3:
     print(i_Number1, i_Number2, i_Number3)
     
-    
+
+###ACS - This works well. Is it the most efficient solution?
+###ACS - You do need to make sure there are more commetns and the end of the
+###ACS - the loopps and slection statements are identified e.g. # end if
 
 
 
