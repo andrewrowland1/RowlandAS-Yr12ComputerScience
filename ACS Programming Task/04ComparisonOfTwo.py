@@ -11,4 +11,7 @@ else:
 # endif
 print(final, lowest)
 
+##ACS - A good slution .. well done
+###ACS - try to think of comments which explain the condition for the if statement
+
 
