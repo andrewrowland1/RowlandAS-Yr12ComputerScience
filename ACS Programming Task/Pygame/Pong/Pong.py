@@ -17,18 +17,21 @@ size = (640,480)
 screen = pygame.display.set_mode(size)
 
 # -- Title of new window/screen
-pygame.display.set_caption("My Window")
+pygame.display.set_caption("Pong")
 
 # -- Exit game flag set to false
 done = False
-sun_x = 40
-sun_y = 100
 
 # --Manages how fast screen refreshes
 clock = pygame.time.Clock()
 
 
 # -- Game Loop
+ball_width = 20
+x_val = 150
+y_val = 200
+x_direction = 1
+y_direction = 1
 while not done:
     # -- User input and controls
     for event in pygame.event.get():
@@ -38,15 +41,15 @@ while not done:
     #nextevent
 
     # -- Game logic goes after this comment
-    sun_x = sun_x + 5
-    if sun_x == 640:
-        sun_x = 0
+    x_val = x_val + x_direction
+    y_val = y_val + y_direction
+
     # -- Screen background is BLACK
     screen.fill(BLACK)
 
     # -- Draw here
-    pygame.draw.rect(screen, BLUE, (220,165,200,150))
-    pygame.draw.circle(screen, YELLOW, (sun_x,sun_y),40,0)
+    pygame.draw.rect(screen, BLUE, (x_val,y_val,ball_width,ball_width))
+    
 
     # -- flip display to reveal new position of objects
     pygame.display.flip()
