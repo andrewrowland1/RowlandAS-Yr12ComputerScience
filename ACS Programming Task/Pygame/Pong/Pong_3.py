@@ -1,4 +1,11 @@
 import pygame
+font_name = pygame.font.match_font('arial')
+def draw_text(surf, text, size, x, y):
+        font = pygame.font.Font(font_name, size)
+        text_surface = font.render(text, True, WHITE)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x, y)
+        surf.blit(text_surface, text_rect)
 # -- Global constants
 
 
@@ -13,7 +20,9 @@ YELLOW = (255,255,0)
 pygame.init()
 
 # -- Blank Screen
-size = (640,480)
+display_width = 640
+display_length = 480
+size = (display_width, display_length)
 screen = pygame.display.set_mode(size)
 
 # -- Title of new window/screen
@@ -30,34 +39,56 @@ clock = pygame.time.Clock()
 ball_width = 20
 x_val = 150
 y_val = 200
-x_direction = 1
-y_direction = 1
+x_direction = 5
+y_direction = 5
+padd_direction = 0
+padd_speed = 7
 padd_length = 15
 padd_width = 60
 x_padd = 0
 y_padd = 20
+score = 2
 while not done:
     # -- User input and controls
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-        #endif
-        keys = pygame.key.get_pressed()
-        
-
-        if keys[pygame.K_UP]:
-            y_padd = y_padd - 5
-        #endif
-        if keys[pygame.K_DOWN]:
-            y_padd = y_padd + 5
-        #endif
-        
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                 padd_direction = -1
+            elif event.key == pygame.K_DOWN:
+                padd_direction = 1
+            #End if
+        elif event.type == pygame.KEYUP:
+            padd_direction = 0
+        #End if    
     #nextevent
 
         
     
 
     # -- Game logic goes after this comment
+
+    #Paddle movement
+    y_padd = y_padd + padd_direction * padd_speed
+
+    #Left paddle collisions
+    if x_val < ball_width and y_val > y_padd and y_val < y_padd + padd_width:
+        x_direction *= -1
+    if x_val == 0  and y_val != y_padd:
+        x_val = 150
+        y_val = 200
+        x_direction = 5
+        y_direction = 5
+        score = score -1
+        if score == 0:
+            done = True
+    #End if
+    #score
+    
+    #endif
+    
+    
     x_val = x_val + x_direction
     y_val = y_val + y_direction
     #nextevent
@@ -75,7 +106,12 @@ while not done:
     # -- Draw here
     pygame.draw.rect(screen, BLUE, (x_val,y_val,ball_width,ball_width))
     pygame.draw.rect(screen, WHITE, (x_padd,y_padd,padd_length,padd_width))
-
+    
+    draw_text(screen, str(score), 18, display_width / 2, 10)
+    
+    
+    
+        
     # -- flip display to reveal new position of objects
     pygame.display.flip()
 
