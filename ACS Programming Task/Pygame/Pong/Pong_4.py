@@ -1,11 +1,14 @@
 import pygame
 font_name = pygame.font.match_font('arial')
+
 def draw_text(surf, text, size, x, y):
         font = pygame.font.Font(font_name, size)
         text_surface = font.render(text, True, WHITE)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
         surf.blit(text_surface, text_rect)
+                                
+
 # -- Global constants
 
 
@@ -14,6 +17,7 @@ BLACK = (0,0,0)
 WHITE = (255,255,255)
 BLUE = (50,50,255)
 YELLOW = (255,255,0)
+
 
 
 # -- Initialise PyGame
@@ -105,6 +109,9 @@ while not done:
         if score == 0:
                 done = True
         #End if
+        #Right paddle collisions
+        if x_val == display_width - ball_width and y_val <= y_padd2 - 20 and y_val <= y_padd2 + padd_width:
+                x_direction *= -1
         
     
         #endif
