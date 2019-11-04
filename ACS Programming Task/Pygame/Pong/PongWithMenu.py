@@ -7,7 +7,53 @@ def draw_text(surf, text, size, x, y):
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
         surf.blit(text_surface, text_rect)
-                                
+def main_menu():
+
+    intro = True
+    in_game = False
+
+    #Font's and text
+    font = pygame.font.SysFont ("arial", 60)
+    text = font.render ("", True, WHITE)
+    
+
+    #Background Image
+    screen.fill(WHITE)
+    screen.blit(text, (size[0]//2, size[1]//2))
+
+    #BUTTONS
+    screen.blit(text, (size[0]//2 , size[1]//2))
+
+    font = pygame.font.SysFont("arial", 80)
+    text = font.render("1. Press p to play", 5, BLACK)
+    textRect = text.get_rect()
+    textRect.center = (size[0]//2,size[1]//2)
+    screen.blit(text, textRect)
+    pygame.display.flip()
+
+    running = True
+
+    while running:
+        event = pygame.event.wait()
+        pygame.event.get()
+        if event.type == pygame.K_p:
+            print (pygame.mouse.get_pos())
+            in_game = True
+        while intro:
+            for event in pygame.event.get():
+                #print(event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            #end if
+        #next event
+    #end while
+#end function
+
+
+
+
+
 
 # -- Global constants
 
@@ -56,10 +102,17 @@ padd2_speed = 7
 padd2_direction = 0
 x_padd = 0
 y_padd = 20
-score = 2
+score_right = 0
+score_left = 0
 x_padd2 = 625
 y_padd2 = 20
+in_game = False
 while not done:
+    if in_game == False:
+            main_menu()
+    else:
+        
+
         # -- User input and controls
         for event in pygame.event.get():
                 if event.type == pygame.QUIT: 
@@ -73,19 +126,16 @@ while not done:
                 elif event.type == pygame.KEYUP:
                         padd_direction = 0
                 #endif
-                #rightpaddle
-                if event.type == pygame.QUIT: 
-                        done = True
-                elif event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_w:
-                                padd2_direction = -1
-                        elif event.key == pygame.K_s:
-                                padd2_direction = 1
-                #End if
-                elif event.type == pygame.KEYUP:
-                        padd2_direction = 0
-                #endif
- 
+        if x_direction < 0:
+                if y_padd2 < 320:
+                        y_padd2 = y_padd2 + 5
+                elif y_padd2 > 320:
+                        y_padd2 = y_padd2 - 5
+        elif x_direction > 0:
+                if y_padd2 < y_val:
+                        y_padd2 = y_padd2 + 5
+                else:
+                        y_padd2 = y_padd2 - 5
         #nextevent
 
         
@@ -95,36 +145,47 @@ while not done:
 
         #Paddle movement
         y_padd = y_padd + padd_direction * padd_speed
-        y_padd2 = y_padd2 + padd2_direction * padd2_speed
+        
 
         #Left paddle collisions
         if x_val < ball_width and y_val > y_padd and y_val < y_padd + padd_width:
                 x_direction *= -1
-        if x_val == 0  and y_val != y_padd:
-                x_val = 150
-                y_val = 200
-                x_direction = 5
-                y_direction = 5
-                score = score -1
-        if score == 0:
-                done = True
+
+
+        
         #End if
         #Right paddle collisions
-        if x_val == display_width - ball_width and y_val <= y_padd2 - 20 and y_val <= y_padd2 + padd_width:
+        if x_val == 640 - ball_width - ball_width and y_val> y_padd2 and y_val < y_padd2 + padd_width:
                 x_direction *= -1
-        
-    
+
+
+
+        #keeping score
+        if x_val == 0  and y_val != y_padd:
+                x_val = 600
+                y_val = 240
+                score_right = score_right + 1
+        if x_val == 640 - ball_width:
+                x_val = 20
+                y_val = 240
+                score_left = score_left + 1
+        if score_right == 10 or score_left == 10:
+                done = True
         #endif
+
+
+        #ball movements
         x_val = x_val + x_direction
         y_val = y_val + y_direction
-        #nextevent
-        if x_val == 640 - ball_width or x_val == 0:
+        
+        #ball bounce
+        if x_val > 640 - ball_width or x_val < 0:
                 x_direction = x_direction * -1
         #endif
-        if y_val == 480 - ball_width or y_val == 0:
+        if y_val >= 480 - ball_width or y_val <= 0:
                 y_direction = y_direction * -1
         #endif
-        #nextevent
+        
 
         
         # -- Screen background is BLACK
@@ -134,7 +195,9 @@ while not done:
         pygame.draw.rect(screen, BLUE, (x_val,y_val,ball_width,ball_width))
         pygame.draw.rect(screen, WHITE, (x_padd,y_padd,padd_length,padd_width))
         pygame.draw.rect(screen, WHITE, (x_padd2,y_padd2, padd2_length, padd2_width))
-        draw_text(screen, str(score), 18, display_width / 2, 10)
+        
+        draw_text(screen, str(score_left), 18, 20, 10)
+        draw_text(screen, str(score_right), 18, 620,10)
     
     
     
@@ -149,6 +212,3 @@ while not done:
     
 #End While - End of game loop
 pygame.quit()
-        
-        
-            
