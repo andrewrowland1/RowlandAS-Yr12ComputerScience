@@ -1,4 +1,6 @@
 import pygame
+import random
+import math
 # -- Global constants
 
 
@@ -17,7 +19,7 @@ size = (640,480)
 screen = pygame.display.set_mode(size)
 
 # -- Title of new window/screen
-pygame.display.set_caption("My Window")
+pygame.display.set_caption("Space Invaders")
 
 # -- Exit game flag set to false
 done = False
@@ -29,11 +31,7 @@ clock = pygame.time.Clock()
 # -- Game Loop
 while not done:
     # -- User input and controls
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-        #endif
-    #nextevent
+    
 
     # -- Game logic goes after this comment
 
@@ -41,8 +39,7 @@ while not done:
     screen.fill(BLACK)
 
     # -- Draw here
-    pygame.draw.rect(screen, BLUE, (220,165,200,150))
-    pygame.draw.circle(screen, YELLOW, (40,100),40,0)
+    
 
     # -- flip display to reveal new position of objects
     pygame.display.flip()

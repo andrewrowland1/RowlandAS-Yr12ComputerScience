@@ -86,7 +86,7 @@ while not (done):
             done = True
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                for counter in range(0,10000):
+                for counter in range(0,1):
                     RANDOM = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
                     theBall.append(Ball(random.randint(1,700),random.randint(1,400),RANDOM,random.randint(-10,10),random.randint(-10,10)))
                     numNew = numNew + 1
