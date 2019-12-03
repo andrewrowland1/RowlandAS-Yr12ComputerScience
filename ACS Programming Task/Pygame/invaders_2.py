@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import time
 # -- Global constants
 font_name = pygame.font.match_font('arial')
 
@@ -35,7 +36,7 @@ class Invader(pygame.sprite.Sprite):
         # Set position of the sprite
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(0,600)
-        self.rect.y = random.randrange(-50,0)
+        self.rect.y = 0
     # End Procedure
     def update(self):
         self.rect.y = self.rect.y + self.speed
@@ -117,8 +118,10 @@ all_sprites_group = pygame.sprite.Group()
 clock = pygame.time.Clock()
 
 
-# Create the snowflakes
+# Set number of invaders
 number_of_invaders = 10
+
+
 
 for x in range (number_of_invaders):
     my_invader = Invader(BLUE,100,100,1)
@@ -170,6 +173,21 @@ while not done:
                         all_sprites_group.remove(my_bullet)
                 
         # -- Game logic goes after this comment
+        ## SPAWN MORE INVADERS
+        if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_p:
+                                number_of_invaders = 1
+                                my_player.bullet_count += 20
+                                for x in range (number_of_invaders):
+                                        my_invader = Invader(BLUE,100,100,3)
+                                        invader_group.add(my_invader)
+                                        all_sprites_group.add(my_invader)
+                    
+        
+                    
+                    
+                
+                
     
         all_sprites_group.update()
         # --  when invader hits the player add 5 to score
@@ -179,7 +197,7 @@ while not done:
         if my_player.lives == 0:
                 done = True
             
-
+        
         # -- Screen background is BLACK
         screen.fill(BLACK)
 
