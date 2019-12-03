@@ -10,13 +10,15 @@ BLACK = (0,0,0)
 WHITE = (255,255,255)
 BLUE = (50,50,255)
 YELLOW = (255,255,0)
+RED = (255,0,0)
 
-def draw_text(surf, text, size, x, y):
+def draw_text(surf,text,size,x,y):
         font = pygame.font.Font(font_name, size)
-        text_surface = font.render(text, True, WHITE)
-        text_rect = text_surface.get_rect()
+        text = font.render(text, True, WHITE)
+        text_rect = text.get_rect()
         text_rect.midtop = (x, y)
-        surf.blit(text_surface, text_rect)
+        surf.blit(text, text_rect)
+        
 
 # -- Define the class snow which is a sprite
 class Invader(pygame.sprite.Sprite):
@@ -44,6 +46,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self,color,width,height,speed,lives):
         self.lives = lives
         self.speed = speed
+        self.bullet_count = 20 
+        self.score = 0
         # Call the sprite constructor
         super().__init__()
         # Create a sprite and fill it with colour
@@ -63,7 +67,25 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = size[0] - 10
     def player_set_speed(self, val):
         self.speed = val
-        
+# End Class
+# -- define the class bullet which is a sprite
+class Bullet(pygame.sprite.Sprite):
+        def __init__(self,color,width,height,speed):
+                self.speed = speed
+                super().__init__()
+                # Create a sprite and fill it with colour
+                self.image = pygame.Surface([width,height])
+                self.image.fill(color)
+                self.image = pygame.image.load("bullet_image.png")
+                # Set position of the sprite
+                self.rect = self.image.get_rect()
+                self.rect.x = my_player.rect.x + 20
+                self.rect.y = my_player.rect.y
+        # End Procedure
+        def update(self):
+                self.rect.y = self.rect.y + self.speed
+        # End Procedure
+# End Class
         
         
         
@@ -84,6 +106,8 @@ done = False
 invader_group = pygame.sprite.Group()
 # Create a list of players
 player_group = pygame.sprite.Group()
+# Create a list of bullets
+bullet_group = pygame.sprite.Group()
 # Create a list of all sprites
 all_sprites_group = pygame.sprite.Group()
 
@@ -95,6 +119,7 @@ clock = pygame.time.Clock()
 
 # Create the snowflakes
 number_of_invaders = 10
+
 for x in range (number_of_invaders):
     my_invader = Invader(BLUE,100,100,1)
     invader_group.add(my_invader)
@@ -109,45 +134,67 @@ for x in range (number_of_players):
 
 # -- Game Loop
 while not done:
-    # -- User input and controls
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                my_player.player_set_speed(-3)
-            elif event.key == pygame.K_RIGHT:
-                my_player.player_set_speed(3)
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                my_player.player_set_speed(0)
+        # -- User input and controls
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+                elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_LEFT:
+                                my_player.player_set_speed(-5)
+                        elif event.key == pygame.K_RIGHT:
+                                my_player.player_set_speed(5)
+                elif event.type == pygame.KEYUP:
+                        if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                                my_player.player_set_speed(0)
+        
+        
+                if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE and my_player.bullet_count > 0:
+                                my_bullet = Bullet(RED,2,2,-10)
+                                bullet_group.add(my_bullet)
+                                my_player.bullet_count += -1
+                                all_sprites_group.add(my_bullet)
+                        #endif
+                #endif
+        if my_player.bullet_count == 0:
+                done = True
+        #next event
+        for bullet_shot in bullet_group:
+                invader_hit_group = pygame.sprite.spritecollide(bullet_shot, invader_group, True)
+                for bullet_shot in invader_hit_group:
+                        my_player.score += 1
+                        bullet_group.remove(my_bullet)
+                        all_sprites_group.remove(my_bullet)
+                if my_bullet.rect.y < 0:
+                        bullet_group.remove(my_bullet)
+                        all_sprites_group.remove(my_bullet)
+                
+        # -- Game logic goes after this comment
     
-    
-
-    # -- Game logic goes after this comment
-    all_sprites_group.update()
-    # --  when invader hits the player add 5 to score
-    player_hit_group = pygame.sprite.spritecollide(my_player, invader_group, True)
-    for hit in player_hit_group:
-        my_player.lives += -1
+        all_sprites_group.update()
+        # --  when invader hits the player add 5 to score
+        player_hit_group = pygame.sprite.spritecollide(my_player, invader_group, True)
+        for hit in player_hit_group:
+                my_player.lives += -1
         if my_player.lives == 0:
                 done = True
-    
+            
 
-    # -- Screen background is BLACK
-    screen.fill(BLACK)
+        # -- Screen background is BLACK
+        screen.fill(BLACK)
 
-    # -- Draw here
-    all_sprites_group.draw(screen)
+        # -- Draw here
+        all_sprites_group.draw(screen)
 
-    draw_text(screen, str(my_player.lives),50,10,10)
-    
-    
+        draw_text(screen, str("Lives: %d" % my_player.lives),20,40,10)
+        draw_text(screen, str("Score: %d" % my_player.score),20,40,30)
+        draw_text(screen, str("Bullets: %d" % my_player.bullet_count),20,40,50)
+        
 
-    # -- flip display to reveal new position of objects
-    pygame.display.flip()
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
 
-    # -- The clock ticks over
-    clock.tick(60)
+        # -- The clock ticks over
+        clock.tick(60)
 #End While - End of game loop
 pygame.quit()
