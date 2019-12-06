@@ -2,6 +2,7 @@ import pygame
 import random
 import math
 import time
+
 # -- Global constants
 font_name = pygame.font.match_font('arial')
 
@@ -49,6 +50,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = speed
         self.bullet_count = 20 
         self.score = 0
+        self.megabullet_count = 20
         # Call the sprite constructor
         super().__init__()
         # Create a sprite and fill it with colour
@@ -87,9 +89,24 @@ class Bullet(pygame.sprite.Sprite):
                 self.rect.y = self.rect.y + self.speed
         # End Procedure
 # End Class
-        
-        
-        
+class Megabullet(pygame.sprite.Sprite):
+        def __init__(self,color,width,height,speed):
+                self.speed = speed
+                super().__init__()
+                # Create a sprite and fill it with colour
+                self.image = pygame.Surface([width,height])
+                self.image.fill(color)
+                self.image = pygame.image.load("megabullet_image.png")
+                # Set position of the sprite
+                self.rect = self.image.get_rect()
+                self.rect.x = my_player.rect.x 
+                self.rect.y = my_player.rect.y
+        # End Procedure
+        def update(self):
+                self.rect.y = self.rect.y + self.speed
+        # End Procedure
+# End Class
+     
 
 # -- Initialise PyGame
 pygame.init()
@@ -109,6 +126,7 @@ invader_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 # Create a list of bullets
 bullet_group = pygame.sprite.Group()
+megabullet_group = pygame.sprite.Group()
 # Create a list of all sprites
 all_sprites_group = pygame.sprite.Group()
 
@@ -116,6 +134,7 @@ all_sprites_group = pygame.sprite.Group()
 
 # --Manages how fast screen refreshes
 clock = pygame.time.Clock()
+
 
 
 # Set number of invaders
@@ -134,9 +153,10 @@ for x in range (number_of_players):
     player_group.add(my_player)
     all_sprites_group.add(my_player)
 #Next x
-
+background_image = pygame.image.load("space_background.png").convert()
 # -- Game Loop
 while not done:
+        
         # -- User input and controls
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -157,6 +177,15 @@ while not done:
                                 bullet_group.add(my_bullet)
                                 my_player.bullet_count += -1
                                 all_sprites_group.add(my_bullet)
+                if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_q:
+
+                                my_megabullet = Megabullet(RED,100,100,-10)
+                                megabullet_group.add(my_megabullet)
+                                my_player.megabullet_count += -1
+                                all_sprites_group.add(my_megabullet)
+                #endif
+        #endif
                         #endif
                 #endif
         if my_player.bullet_count == 0:
@@ -164,6 +193,7 @@ while not done:
         #next event
         for bullet_shot in bullet_group:
                 invader_hit_group = pygame.sprite.spritecollide(bullet_shot, invader_group, True)
+                
                 for bullet_shot in invader_hit_group:
                         my_player.score += 1
                         bullet_group.remove(my_bullet)
@@ -171,17 +201,29 @@ while not done:
                 if my_bullet.rect.y < 0:
                         bullet_group.remove(my_bullet)
                         all_sprites_group.remove(my_bullet)
+        for megabullet_shot in megabullet_group:
+                invader_hit_group = pygame.sprite.spritecollide(megabullet_shot, invader_group, True)
+                for megabullet_shot in invader_hit_group:
+                        my_player.score += 1
+                        megabullet_group.remove(my_megabullet)
+                        all_sprites_group.remove(my_megabullet)
+                if my_megabullet.rect.y < 0:
+                        bullet_group.remove(my_megabullet)
+                        all_sprites_group.remove(my_megabullet)
+                        
                 
         # -- Game logic goes after this comment
         ## SPAWN MORE INVADERS
         if event.type == pygame.KEYDOWN:
+                
                         if event.key == pygame.K_p:
-                                number_of_invaders = 1
+                                number_of_invaders = 10
                                 my_player.bullet_count += 20
                                 for x in range (number_of_invaders):
                                         my_invader = Invader(BLUE,100,100,3)
                                         invader_group.add(my_invader)
                                         all_sprites_group.add(my_invader)
+        
                     
         
                     
@@ -194,12 +236,13 @@ while not done:
         player_hit_group = pygame.sprite.spritecollide(my_player, invader_group, True)
         for hit in player_hit_group:
                 my_player.lives += -1
-        if my_player.lives == 0:
+        if my_player.lives < 0:
                 done = True
             
         
         # -- Screen background is BLACK
         screen.fill(BLACK)
+        screen.blit(background_image,[0,0])
 
         # -- Draw here
         all_sprites_group.draw(screen)
