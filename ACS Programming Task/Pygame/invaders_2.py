@@ -1,7 +1,6 @@
 import pygame
 import random
-import math
-import time
+
 
 # -- Global constants
 font_name = pygame.font.match_font('arial')
@@ -184,6 +183,15 @@ while not done:
                                 megabullet_group.add(my_megabullet)
                                 my_player.megabullet_count += -1
                                 all_sprites_group.add(my_megabullet)
+                if event.type == pygame.KEYDOWN:
+                
+                        if event.key == pygame.K_p:
+                                number_of_invaders = 10
+                                my_player.bullet_count += 20
+                                for x in range (number_of_invaders):
+                                        my_invader = Invader(BLUE,100,100,3)
+                                        invader_group.add(my_invader)
+                                        all_sprites_group.add(my_invader)
                 #endif
         #endif
                         #endif
@@ -214,15 +222,7 @@ while not done:
                 
         # -- Game logic goes after this comment
         ## SPAWN MORE INVADERS
-        if event.type == pygame.KEYDOWN:
-                
-                        if event.key == pygame.K_p:
-                                number_of_invaders = 10
-                                my_player.bullet_count += 20
-                                for x in range (number_of_invaders):
-                                        my_invader = Invader(BLUE,100,100,3)
-                                        invader_group.add(my_invader)
-                                        all_sprites_group.add(my_invader)
+        
         
                     
         
