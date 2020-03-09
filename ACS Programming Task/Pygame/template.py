@@ -19,7 +19,7 @@ size = (640,480)
 screen = pygame.display.set_mode(size)
 
 # -- Title of new window/screen
-pygame.display.set_caption("Space Invaders")
+pygame.display.set_caption("Maps")
 
 # -- Exit game flag set to false
 done = False

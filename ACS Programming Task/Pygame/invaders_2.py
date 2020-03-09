@@ -202,6 +202,7 @@ while not done:
         for bullet_shot in bullet_group:
                 invader_hit_group = pygame.sprite.spritecollide(bullet_shot, invader_group, True)
                 
+                
                 for bullet_shot in invader_hit_group:
                         my_player.score += 1
                         bullet_group.remove(my_bullet)
@@ -222,9 +223,6 @@ while not done:
                 
         # -- Game logic goes after this comment
         ## SPAWN MORE INVADERS
-        
-        
-                    
         
                     
                     

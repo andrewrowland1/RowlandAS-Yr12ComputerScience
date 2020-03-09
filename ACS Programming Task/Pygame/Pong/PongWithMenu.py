@@ -7,48 +7,7 @@ def draw_text(surf, text, size, x, y):
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
         surf.blit(text_surface, text_rect)
-def main_menu():
 
-    intro = True
-    in_game = False
-
-    #Font's and text
-    font = pygame.font.SysFont ("arial", 60)
-    text = font.render ("", True, WHITE)
-    
-
-    #Background Image
-    screen.fill(WHITE)
-    screen.blit(text, (size[0]//2, size[1]//2))
-
-    #BUTTONS
-    screen.blit(text, (size[0]//2 , size[1]//2))
-
-    font = pygame.font.SysFont("arial", 80)
-    text = font.render("1. Press p to play", 5, BLACK)
-    textRect = text.get_rect()
-    textRect.center = (size[0]//2,size[1]//2)
-    screen.blit(text, textRect)
-    pygame.display.flip()
-
-    running = True
-
-    while running:
-        event = pygame.event.wait()
-        pygame.event.get()
-        if event.type == pygame.K_p:
-            print (pygame.mouse.get_pos())
-            in_game = True
-        while intro:
-            for event in pygame.event.get():
-                #print(event)
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-            #end if
-        #next event
-    #end while
-#end function
 
 
 
@@ -108,9 +67,7 @@ x_padd2 = 625
 y_padd2 = 20
 in_game = False
 while not done:
-    if in_game == False:
-            main_menu()
-    else:
+    
         
 
         # -- User input and controls
